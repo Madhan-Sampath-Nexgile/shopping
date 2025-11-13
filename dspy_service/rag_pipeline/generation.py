@@ -48,7 +48,7 @@ class SmartSearchRAG(dspy.Predict):
             f"Answer clearly and concisely using only the above information."
         )
 
-        # Pass to LLM through DSPy
+        # Pass to LLM through DSPydfgb
         response = dspy.Predict("prompt -> answer")(prompt=prompt)
         return response
 
