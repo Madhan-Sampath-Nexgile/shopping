@@ -1,0 +1,122 @@
+{
+  "p1": {
+    "id": "p1",
+    "name": "Apple iPhone 15 Pro",
+    "category": "Smartphone",
+    "content": "The Apple iPhone 15 Pro features a 6.1-inch Super Retina XDR display, the powerful A17 Pro chip, titanium frame, and a triple-lens camera system with 48MP main sensor. It supports fast charging, 5G, and MagSafe accessories for seamless connectivity."
+  },
+  "p2": {
+    "id": "p2",
+    "name": "Noise Cancelling Headphones",
+    "category": "Audio",
+    "content": "These over-ear noise-cancelling headphones provide high-fidelity sound and adaptive noise control, ideal for travel and focus. Equipped with Bluetooth 5.3, 30-hour battery life, and quick charge support. Perfect for work-from-home and studio sessions."
+  },
+  "p3": {
+    "id": "p3",
+    "name": "Samsung Galaxy Watch 6",
+    "category": "Wearable",
+    "content": "The Samsung Galaxy Watch 6 comes with advanced sleep tracking, ECG monitoring, and personalized fitness tracking. Featuring a circular AMOLED display, 5ATM water resistance, and integration with Samsung Health. A perfect all-day smartwatch for Android users."
+  },
+  "p4": {
+    "id": "p4",
+    "name": "Dell XPS 15 Laptop",
+    "category": "Laptop",
+    "content": "Dell XPS 15 delivers power with a 13th Gen Intel i7 processor, NVIDIA RTX 4070 GPU, and 16GB DDR5 RAM. Features a stunning 15.6-inch 3.5K OLED display, premium aluminum chassis, and long battery life — suitable for creators and professionals."
+  },
+  "p5": {
+    "id": "p5",
+    "name": "Apple MacBook Air M3",
+    "category": "Laptop",
+    "content": "Apple MacBook Air M3 features the Apple M3 chip, a fanless lightweight design, 18-hour battery life, and a 13.6-inch Liquid Retina display. Perfect for productivity, programming, and multimedia with excellent thermal efficiency and silent performance."
+  },
+  "p6": {
+    "id": "p6",
+    "name": "Sony WH-1000XM5",
+    "category": "Audio",
+    "content": "Sony WH-1000XM5 headphones offer industry-leading noise cancellation, multi-device connectivity, and crystal-clear calls with AI noise reduction. Up to 40 hours of playtime and comfortable lightweight design make them perfect for travelers."
+  },
+  "p7": {
+    "id": "p7",
+    "name": "Google Pixel 8 Pro",
+    "category": "Smartphone",
+    "content": "Google Pixel 8 Pro brings AI-powered photography with the Tensor G3 processor, 50MP main camera, and 120Hz LTPO OLED display. Offers 7 years of software updates, Titan M2 security chip, and superior night photography."
+  },
+  "p8": {
+    "id": "p8",
+    "name": "Apple Watch Series 9",
+    "category": "Wearable",
+    "content": "Apple Watch Series 9 includes a faster S9 chip, double-tap gesture control, temperature sensor, ECG app, and advanced sleep tracking. Integrated with Siri on-device and supports crash detection and emergency SOS."
+  },
+  "p9": {
+    "id": "p9",
+    "name": "Fitbit Charge 6",
+    "category": "Wearable",
+    "content": "Fitbit Charge 6 combines health and fitness tracking with heart rate monitoring, stress management, and Google Fit integration. Includes GPS tracking, sleep stages analysis, and battery life up to 7 days."
+  },
+  "p10": {
+    "id": "p10",
+    "name": "ASUS ROG Strix G16",
+    "category": "Laptop",
+    "content": "ASUS ROG Strix G16 gaming laptop packs an Intel Core i9-13980HX, NVIDIA RTX 4080 GPU, and a 240Hz QHD+ display. Designed for gamers and creators with intelligent cooling and customizable RGB keyboard."
+  },
+  "p11": {
+    "id": "p11",
+    "name": "Apple AirPods Pro 2",
+    "category": "Audio",
+    "content": "Apple AirPods Pro 2 deliver adaptive transparency, spatial audio, and active noise cancellation powered by the H2 chip. Support MagSafe charging, IPX4 water resistance, and seamless integration across Apple devices."
+  },
+  "p12": {
+    "id": "p12",
+    "name": "Samsung Galaxy Buds 2 Pro",
+    "category": "Audio",
+    "content": "Samsung Galaxy Buds 2 Pro offer 24-bit Hi-Fi audio, intelligent active noise cancellation, and voice detect features. Ergonomic design ensures comfort, and Auto Switch allows seamless device connectivity."
+  },
+  "p13": {
+    "id": "p13",
+    "name": "HP Spectre x360 14",
+    "category": "Laptop",
+    "content": "HP Spectre x360 14 is a 2-in-1 convertible laptop with a 13.5-inch OLED touch display, 12th Gen Intel i7 CPU, and long battery life. Built for versatility, combining portability with premium performance and pen support."
+  },
+  "p14": {
+    "id": "p14",
+    "name": "OnePlus Watch 2",
+    "category": "Wearable",
+    "content": "OnePlus Watch 2 offers dual-engine architecture for long battery life, fitness tracking, and Google WearOS integration. Features AMOLED display, 5ATM water resistance, and fast charging support."
+  },
+  "p15": {
+    "id": "p15",
+    "name": "JBL Charge 5 Bluetooth Speaker",
+    "category": "Audio",
+    "content": "JBL Charge 5 is a portable Bluetooth speaker with powerful bass, 20 hours of playtime, IP67 waterproof and dustproof rating. Doubles as a power bank for charging devices via USB-C."
+  },
+  "p16": {
+    "id": "p16",
+    "name": "Lenovo ThinkPad X1 Carbon",
+    "category": "Laptop",
+    "content": "Lenovo ThinkPad X1 Carbon Gen 11 features Intel Evo i7 processor, carbon fiber build, and a 2.8K display. Known for durability, long battery life, and enterprise-grade security."
+  },
+  "p17": {
+    "id": "p17",
+    "name": "Amazon Echo Dot 5th Gen",
+    "category": "Smart Home",
+    "content": "Amazon Echo Dot 5th Gen smart speaker provides Alexa voice control, better bass, temperature sensor, and motion detection. Ideal for home automation and hands-free control."
+  },
+  "p18": {
+    "id": "p18",
+    "name": "Google Nest Hub 2nd Gen",
+    "category": "Smart Home",
+    "content": "Google Nest Hub 2nd Gen features a 7-inch smart display, Google Assistant, gesture control, and sleep sensing. Integrates with smart devices for voice-controlled automation."
+  },
+  "p19": {
+    "id": "p19",
+    "name": "Sony PlayStation 5",
+    "category": "Gaming",
+    "content": "Sony PlayStation 5 delivers next-gen performance with AMD Ryzen Zen 2 CPU, RDNA 2 GPU, and 4K gaming support. Features DualSense haptic feedback and lightning-fast SSD."
+  },
+  "p20": {
+    "id": "p20",
+    "name": "Xbox Series X",
+    "category": "Gaming",
+    "content": "Microsoft Xbox Series X offers 12 teraflops of power, fast loading times, 4K HDR gaming, and backward compatibility with thousands of titles. Features quick resume and Dolby Atmos support."
+  }
+}
