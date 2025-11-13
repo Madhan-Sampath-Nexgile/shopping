@@ -42,10 +42,14 @@ export function CartProvider({ children }) {
     return () => window.removeEventListener('cart-updated', handleCartUpdate);
   }, [fetchCartCount]);
 
-  const addToCart = useCallback(async (productId, quantity = 1) => {
+  const addToCart = useCallback(async (productId, quantity = 1, variantId = null) => {
     setLoading(true);
     try {
-      await api.post('/cart/add', { productId, quantity });
+      const payload = { productId, quantity };
+      if (variantId) {
+        payload.variantId = variantId;
+      }
+      await api.post('/cart/add', payload);
       await fetchCartCount();
       window.dispatchEvent(new CustomEvent('cart-updated'));
       return { success: true };

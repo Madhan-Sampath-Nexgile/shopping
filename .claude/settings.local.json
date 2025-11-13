@@ -37,7 +37,8 @@
       "Bash(powershell -Command:*)",
       "Bash(tasklist:*)",
       "Bash(cmd /c:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git config:*)"
     ],
     "deny": [],
     "ask": []

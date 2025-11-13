@@ -93,7 +93,12 @@ const fillDemoCredentials = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Password</label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-sm font-medium">Password</label>
+              <Link to="/request-reset" className="text-xs text-blue-600 hover:text-blue-700">
+                Forgot Password?
+              </Link>
+            </div>
             <input
               className="w-full px-3 py-2 border rounded"
               type="password"

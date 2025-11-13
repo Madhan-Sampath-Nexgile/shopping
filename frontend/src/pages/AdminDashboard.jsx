@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import api from '../services/api'
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts'
-import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
+import { PlusIcon, PencilIcon, TrashIcon, TagIcon } from '@heroicons/react/24/outline'
 
 export default function AdminDashboard(){
+  const navigate = useNavigate()
   const [metrics,setMetrics]=useState([])
   const [metricsSummary, setMetricsSummary] = useState(null)
   const [products, setProducts] = useState([])
@@ -17,7 +19,7 @@ export default function AdminDashboard(){
     stock: ''
   })
   const [loading, setLoading] = useState(false)
-  const [activeTab, setActiveTab] = useState('products') // 'products', 'orders', or 'metrics'
+  const [activeTab, setActiveTab] = useState('products') // 'products', 'orders', 'discounts', or 'metrics'
   const [orders, setOrders] = useState([])
   const [updatingOrder, setUpdatingOrder] = useState(null)
 
@@ -150,6 +152,13 @@ export default function AdminDashboard(){
           }`}
         >
           Order Management
+        </button>
+        <button
+          onClick={() => navigate('/admin/discounts')}
+          className="pb-3 px-4 font-medium text-gray-500 hover:text-gray-700 transition flex items-center gap-2"
+        >
+          <TagIcon className="w-5 h-5" />
+          Discount Codes
         </button>
         <button
           onClick={() => setActiveTab('metrics')}

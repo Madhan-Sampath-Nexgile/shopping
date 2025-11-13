@@ -462,7 +462,11 @@ export default function Orders() {
                     {/* Order Timeline */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-800 mb-4">Order Status Timeline</h3>
-                      <OrderTimeline status={order.status} createdAt={order.created_at} />
+                      <OrderTimeline
+                        status={order.status}
+                        createdAt={order.created_at}
+                        tracking={selectedOrderDetails?.tracking}
+                      />
                     </div>
 
                     {/* Order Items and Address Grid */}

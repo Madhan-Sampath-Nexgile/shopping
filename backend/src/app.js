@@ -13,6 +13,10 @@ import adminRoutes from './routes/admin.routes.js'
 import authRoutes from './routes/auth.routes.js'
 import profileRoutes from './routes/profile.routes.js'
 import wishlistRoutes from './routes/wishlist.routes.js'
+import shippingRoutes from './routes/shipping.routes.js'
+import discountRoutes from './routes/discount.routes.js'
+import productVariantsRoutes from './routes/product-variants.routes.js'
+import productImagesRoutes from './routes/product-images.routes.js'
 
 
 const app = express()
@@ -33,6 +37,10 @@ app.use('/api/products', productRoutes)
 app.use('/api/cart', cartRoutes)
 app.use('/api/orders', orderRoutes)
 app.use('/api/wishlist', wishlistRoutes)
+app.use('/api/shipping', shippingRoutes)
+app.use('/api/discount', discountRoutes)
+app.use('/api/product-variants', productVariantsRoutes)
+app.use('/api/product-images', productImagesRoutes)
 app.use('/api/rag', searchLimiter, ragRoutes)
 app.use('/api/abtest', abRoutes)
 app.use('/api/admin', adminRoutes)

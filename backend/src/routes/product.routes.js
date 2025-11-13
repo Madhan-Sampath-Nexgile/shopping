@@ -124,7 +124,27 @@ r.get("/:id", optionalAuth, async (req, res) => {
         ? reviewRes.rows.reduce((a, c) => a + c.rating, 0) / reviewRes.rowCount
         : 0;
 
-    /* 3️⃣ Fetch Q&A (if exists or placeholder) */
+    /* 3️⃣ Fetch Product Variants */
+    const variantsRes = await pool.query(
+      `SELECT id, variant_type, variant_value, price_adjustment, stock_quantity, sku, is_available
+       FROM product_variants
+       WHERE product_id = $1 AND is_available = TRUE
+       ORDER BY variant_type, variant_value`,
+      [id]
+    ).catch(() => ({ rows: [] }));
+    product.variants = variantsRes.rows || [];
+
+    /* 4️⃣ Fetch Product Images */
+    const imagesRes = await pool.query(
+      `SELECT id, image_url, alt_text, display_order, is_primary
+       FROM product_images
+       WHERE product_id = $1
+       ORDER BY is_primary DESC, display_order ASC`,
+      [id]
+    ).catch(() => ({ rows: [] }));
+    product.gallery = imagesRes.rows || [];
+
+    /* 5️⃣ Fetch Q&A (if exists or placeholder) */
     const qaRes = await pool.query(
       `SELECT q.id, q.question, q.answer, u.name AS asked_by, q.created_at
        FROM product_questions q
@@ -132,10 +152,10 @@ r.get("/:id", optionalAuth, async (req, res) => {
        WHERE q.product_id=$1
        ORDER BY q.created_at DESC`,
       [id]
-    ).catch(() => ({ rows: [] })); // in case table doesn’t exist yet
+    ).catch(() => ({ rows: [] })); // in case table doesn't exist yet
     product.qa = qaRes.rows || [];
 
-    /* 4️⃣ Fetch Related Products (same category or accessories) */
+    /* 6️⃣ Fetch Related Products (same category or accessories) */
     const relatedRes = await pool.query(
       `SELECT id, name, price, category, images, stock
        FROM products
@@ -146,7 +166,7 @@ r.get("/:id", optionalAuth, async (req, res) => {
     );
     product.related = relatedRes.rows;
 
-    /* 5️⃣ AI Summary from DSPy (optional) */
+    /* 7️⃣ AI Summary from DSPy (optional) */
     try {
       const aiResponse = await fetch("http://localhost:8000/recommend", {
         method: "POST",

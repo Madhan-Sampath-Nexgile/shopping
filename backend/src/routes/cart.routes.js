@@ -15,6 +15,7 @@ r.get('/', auth, async (req, res) => {
       `SELECT
         c.id AS cart_id,
         c.quantity,
+        c.variant_id,
         c.created_at AS added_at,
         p.id AS product_id,
         p.name,
@@ -22,16 +23,24 @@ r.get('/', auth, async (req, res) => {
         p.price,
         p.images,
         p.stock,
-        p.category
+        p.category,
+        pv.variant_type,
+        pv.variant_value,
+        pv.price_adjustment,
+        pv.stock_quantity AS variant_stock
        FROM cart c
        JOIN products p ON c.product_id = p.id
+       LEFT JOIN product_variants pv ON c.variant_id = pv.id
        WHERE c.user_id = $1
        ORDER BY c.created_at DESC`,
       [userId]
     );
 
-    // Calculate totals
-    const subtotal = rows.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    // Calculate totals with variant price adjustments
+    const subtotal = rows.reduce((sum, item) => {
+      const itemPrice = parseFloat(item.price) + (item.price_adjustment ? parseFloat(item.price_adjustment) : 0);
+      return sum + (itemPrice * item.quantity);
+    }, 0);
     const itemCount = rows.reduce((sum, item) => sum + item.quantity, 0);
 
     res.json({
@@ -54,7 +63,7 @@ r.get('/', auth, async (req, res) => {
 /* -------------------------------------------------------------------------- */
 r.post('/add', auth, async (req, res) => {
   const userId = req.user.id;
-  const { productId, quantity = 1 } = req.body;
+  const { productId, quantity = 1, variantId } = req.body;
 
   if (!productId) {
     return res.status(400).json({ error: 'productId is required' });
@@ -65,7 +74,7 @@ r.post('/add', auth, async (req, res) => {
   }
 
   try {
-    // Check if product exists and has stock
+    // Check if product exists
     const productCheck = await pool.query(
       'SELECT id, stock, name FROM products WHERE id = $1',
       [productId]
@@ -77,20 +86,56 @@ r.post('/add', auth, async (req, res) => {
 
     const product = productCheck.rows[0];
 
-    if (product.stock < quantity) {
-      return res.status(400).json({ error: 'Insufficient stock' });
+    // If variant is specified, check variant stock
+    if (variantId) {
+      const variantCheck = await pool.query(
+        'SELECT stock_quantity, is_available FROM product_variants WHERE id = $1',
+        [variantId]
+      );
+
+      if (variantCheck.rows.length === 0) {
+        return res.status(404).json({ error: 'Variant not found' });
+      }
+
+      const variant = variantCheck.rows[0];
+
+      if (!variant.is_available) {
+        return res.status(400).json({ error: 'Variant is not available' });
+      }
+
+      if (variant.stock_quantity < quantity) {
+        return res.status(400).json({ error: 'Insufficient variant stock' });
+      }
+    } else {
+      // Check product stock
+      if (product.stock < quantity) {
+        return res.status(400).json({ error: 'Insufficient stock' });
+      }
     }
 
-    // Add or update cart item
-    await pool.query(
-      `INSERT INTO cart (user_id, product_id, quantity, updated_at)
-       VALUES ($1, $2, $3, NOW())
-       ON CONFLICT (user_id, product_id)
-       DO UPDATE SET
-         quantity = cart.quantity + EXCLUDED.quantity,
-         updated_at = NOW()`,
-      [userId, productId, quantity]
+    // Check if this exact item (product + variant combo) already exists in cart
+    const existingItem = await pool.query(
+      `SELECT id, quantity FROM cart
+       WHERE user_id = $1 AND product_id = $2 AND (variant_id = $3 OR (variant_id IS NULL AND $3 IS NULL))`,
+      [userId, productId, variantId]
     );
+
+    if (existingItem.rows.length > 0) {
+      // Update existing item
+      await pool.query(
+        `UPDATE cart
+         SET quantity = quantity + $1, updated_at = NOW()
+         WHERE id = $2`,
+        [quantity, existingItem.rows[0].id]
+      );
+    } else {
+      // Insert new item
+      await pool.query(
+        `INSERT INTO cart (user_id, product_id, quantity, variant_id, updated_at)
+         VALUES ($1, $2, $3, $4, NOW())`,
+        [userId, productId, quantity, variantId]
+      );
+    }
 
     res.status(201).json({ message: `Added ${product.name} to cart` });
   } catch (err) {

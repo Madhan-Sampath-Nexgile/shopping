@@ -8,7 +8,7 @@ import Home from './pages/Home.jsx'
 import ProductDetails from './pages/ProductDetails.jsx'
 import Category from './pages/Category.jsx'
 import Cart from './pages/Cart.jsx'
-import Checkout from './pages/Checkout.jsx'
+import Checkout from './pages/CheckoutEnhanced.jsx'
 import Orders from './pages/Orders.jsx'
 import Profile from './pages/Profile.jsx'
 import AdminDashboard from './pages/AdminDashboard.jsx'
@@ -17,6 +17,10 @@ import Login from './pages/Login.jsx'
 import ProductList from "./pages/ProductList.jsx";
 import Wishlist from "./pages/Wishlist.jsx";
 import Compare from "./pages/Compare.jsx";
+import ShippingAddresses from "./pages/ShippingAddresses.jsx";
+import RequestReset from "./pages/RequestReset.jsx";
+import ResetPassword from "./pages/ResetPassword.jsx";
+import AdminDiscounts from "./pages/AdminDiscounts.jsx";
 
 // Components
 import Navbar from './components/common/Navbar.jsx'
@@ -91,10 +95,28 @@ export default function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/shipping-addresses"
+              element={
+                <ProtectedRoute>
+                  <ShippingAddresses />
+                </ProtectedRoute>
+              }
+            />
 
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route
+              path="/admin/discounts"
+              element={
+                <ProtectedRoute>
+                  <AdminDiscounts />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/request-reset" element={<RequestReset />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
           </Routes>
         </main>
 

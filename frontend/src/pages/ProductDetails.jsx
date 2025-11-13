@@ -36,6 +36,7 @@ export default function ProductDetails() {
   const [loadingQA, setLoadingQA] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [addingToCart, setAddingToCart] = useState(false);
+  const [selectedVariant, setSelectedVariant] = useState(null);
 
   // Enhanced states
   const [selectedImage, setSelectedImage] = useState(0);
@@ -159,18 +160,21 @@ export default function ProductDetails() {
       return;
     }
 
-    if (!p || p.stock === 0) {
+    // Get current stock considering variant selection
+    const currentStock = selectedVariant ? selectedVariant.stock_quantity : p.stock;
+
+    if (!p || currentStock === 0) {
       showError("Product is out of stock");
       return;
     }
 
-    if (quantity > p.stock) {
-      showError(`Only ${p.stock} items available in stock`);
+    if (quantity > currentStock) {
+      showError(`Only ${currentStock} items available in stock`);
       return;
     }
 
     setAddingToCart(true);
-    const result = await addToCart(id, quantity);
+    const result = await addToCart(id, quantity, selectedVariant?.id);
     setAddingToCart(false);
 
     if (result.success) {
@@ -186,7 +190,8 @@ export default function ProductDetails() {
   };
 
   const increaseQuantity = () => {
-    if (p && quantity < p.stock) {
+    const currentStock = selectedVariant ? selectedVariant.stock_quantity : p.stock;
+    if (p && quantity < currentStock) {
       setQuantity(quantity + 1);
     }
   };
@@ -309,8 +314,15 @@ export default function ProductDetails() {
 
   if (!p) return null;
 
-  const priceInRupees = (p.price / 100).toLocaleString();
-  const isOutOfStock = p.stock === 0 || p.stock_status?.includes("Out");
+  // Calculate final price considering variant adjustment
+  const variantAdjustment = selectedVariant?.price_adjustment ? parseFloat(selectedVariant.price_adjustment) : 0;
+  const finalPrice = (p.price / 100) + variantAdjustment;
+  const priceInRupees = finalPrice.toLocaleString();
+
+  // Check stock considering variant
+  const currentStock = selectedVariant ? selectedVariant.stock_quantity : p.stock;
+  const isOutOfStock = currentStock === 0 || p.stock_status?.includes("Out");
+
   const ratingData = getRatingDistribution();
   const deliveryDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString('en-IN', {
     month: 'short',
@@ -396,11 +408,11 @@ export default function ProductDetails() {
                   <span className={`px-3 py-1.5 rounded-full text-xs font-bold shadow-lg backdrop-blur-sm ${
                     isOutOfStock
                       ? "bg-red-500 text-white"
-                      : p.stock < 10
+                      : currentStock < 10
                       ? "bg-orange-500 text-white"
                       : "bg-green-500 text-white"
                   }`}>
-                    {isOutOfStock ? "Out of Stock" : p.stock < 10 ? `Only ${p.stock} Left` : "In Stock"}
+                    {isOutOfStock ? "Out of Stock" : currentStock < 10 ? `Only ${currentStock} Left` : "In Stock"}
                   </span>
                 </div>
               </>
@@ -530,6 +542,66 @@ export default function ProductDetails() {
             </div>
           </div>
 
+          {/* Product Variants Selector */}
+          {p.variants && p.variants.length > 0 && (
+            <div className="space-y-3">
+              <label className="font-medium text-gray-700">
+                Select {p.variants[0]?.variant_type || 'Variant'}:
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {p.variants.map((variant) => {
+                  const isSelected = selectedVariant?.id === variant.id;
+                  const isOutOfStock = variant.stock_quantity === 0;
+                  const priceAdjustment = variant.price_adjustment ? parseFloat(variant.price_adjustment) : 0;
+
+                  return (
+                    <button
+                      key={variant.id}
+                      onClick={() => {
+                        if (!isOutOfStock) {
+                          setSelectedVariant(variant);
+                          setQuantity(1); // Reset quantity when changing variant
+                        }
+                      }}
+                      disabled={isOutOfStock}
+                      className={`px-4 py-2.5 rounded-lg border-2 font-medium transition-all ${
+                        isOutOfStock
+                          ? 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed line-through'
+                          : isSelected
+                          ? 'border-blue-600 bg-blue-50 text-blue-700 ring-2 ring-blue-200'
+                          : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400 hover:bg-gray-50'
+                      }`}
+                    >
+                      <div className="flex flex-col items-center">
+                        <span className="text-sm font-semibold capitalize">
+                          {variant.variant_value}
+                        </span>
+                        {priceAdjustment !== 0 && !isOutOfStock && (
+                          <span className="text-xs text-gray-600 mt-0.5">
+                            {priceAdjustment > 0 ? '+' : ''} ${priceAdjustment.toFixed(2)}
+                          </span>
+                        )}
+                        {isOutOfStock && (
+                          <span className="text-xs text-red-600 mt-0.5">Out of Stock</span>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+              {selectedVariant && (
+                <div className="text-sm text-gray-600 bg-blue-50 border border-blue-200 rounded-lg p-2">
+                  <span className="font-medium text-blue-900">Selected:</span> {selectedVariant.variant_value}
+                  {selectedVariant.stock_quantity < 10 && selectedVariant.stock_quantity > 0 && (
+                    <span className="ml-2 text-orange-600 font-medium">
+                      (Only {selectedVariant.stock_quantity} left!)
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Quantity Selector */}
           {!isOutOfStock && (
             <div className="flex items-center gap-3">
@@ -547,14 +619,14 @@ export default function ProductDetails() {
                 </span>
                 <button
                   onClick={increaseQuantity}
-                  disabled={quantity >= p.stock}
+                  disabled={quantity >= currentStock}
                   className="px-3 py-1.5 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed text-lg font-semibold transition"
                 >
                   +
                 </button>
               </div>
               <span className="text-sm text-gray-500">
-                {p.stock} available
+                {currentStock} available
               </span>
             </div>
           )}
